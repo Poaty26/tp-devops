@@ -1,22 +1,10 @@
 #!/bin/bash
-
-# Variables
-IMAGE_NAME="devops-app"
+VERSION=${1:-latest}
 CONTAINER_NAME="devops-container"
-PORT=${1:-5000}  # Argument ou 5000 par défaut
+PORT=5000
+IMAGE_NAME="devops-app:$VERSION"
 
-# Stop ancien container s'il existe
-if [ $(docker ps -q -f name=$CONTAINER_NAME) ]; then
-    docker stop $CONTAINER_NAME
-    docker rm $CONTAINER_NAME
-fi
-
-# Build image
-docker build -t $IMAGE_NAME .
-
-# Run container
+docker stop $CONTAINER_NAME 2>/dev/null
+docker rm $CONTAINER_NAME 2>/dev/null
 docker run -d -p $PORT:5000 --name $CONTAINER_NAME $IMAGE_NAME
-
-# Messages
-echo "App déployée sur localhost:$PORT"
-echo "Déploiement terminé"
+echo "Déploiement terminé : version $VERSION sur localhost:$PORT"
